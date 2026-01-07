@@ -7,11 +7,24 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-
 public class ApiResponse<T> {
     private int statusCode;
     private String message;
     private T data;
 
-    
+    public static <T> ApiResponse<T> success(int statusCode, String message, T data) {
+        ApiResponse<T> response = new ApiResponse<>();
+        response.setStatusCode(statusCode);
+        response.setMessage(message);
+        response.setData(data);
+        return response;
+    }
+
+    public static <T> ApiResponse<T> error(int statusCode, String message, T data) {
+        ApiResponse<T> response = new ApiResponse<>();
+        response.setStatusCode(statusCode);
+        response.setMessage(message);
+        response.setData(data);
+        return response;
+    }
 }
