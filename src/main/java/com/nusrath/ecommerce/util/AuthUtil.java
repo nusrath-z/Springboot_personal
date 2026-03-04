@@ -14,11 +14,7 @@ public class AuthUtil {
     }
 
     public String getCurrentUserEmail() {
-        return SecurityContextHolder.getContext().getAuthentication().getName();
-    }
-
-    public Long getCurrentUserId() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        return Long.parseLong(auth.getName());
+        return (auth != null) ? auth.getName() : null;
     }
 }

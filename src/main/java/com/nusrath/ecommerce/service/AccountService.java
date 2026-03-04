@@ -11,9 +11,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.nusrath.ecommerce.util.AuthUtil;
+import com.nusrath.ecommerce.util.JwtUtil;
+import com.nusrath.ecommerce.dto.LoginResponse;
 
 
 @Service
@@ -22,13 +28,19 @@ public class AccountService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthUtil securityUtil;
+    private final AuthenticationManager authenticationManager;
+    private final JwtUtil jwtUtil;
 
     public AccountService(UserRepository userRepository,
                           PasswordEncoder passwordEncoder,
-                          AuthUtil securityUtil) {
+                          AuthUtil securityUtil,
+                          AuthenticationManager authenticationManager,
+                          JwtUtil jwtUtil) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.securityUtil = securityUtil;
+        this.authenticationManager = authenticationManager;
+        this.jwtUtil = jwtUtil;
     }
 
     public UserDetailResponse register(SignUpRequest request) {
@@ -45,16 +57,16 @@ public class AccountService {
         return mapToResponse(savedUser);
     }
 
-    public UserDetailResponse login(LoginRequest request) {
+    public LoginResponse login(LoginRequest request) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String token = jwtUtil.generateToken(userDetails);
 
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new RuntimeException("User not found with this email"));
 
-        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new RuntimeException("Invalid credentials");
-        }
-
-        return mapToResponse(user);
+        return new LoginResponse(token, mapToResponse(user));
     }
 
 
