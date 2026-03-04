@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.nusrath.ecommerce.dto.ApiResponse;
 import com.nusrath.ecommerce.dto.LoginRequest;
+import com.nusrath.ecommerce.dto.LoginResponse;
 import com.nusrath.ecommerce.dto.SignUpRequest;
 import com.nusrath.ecommerce.dto.UserDetailResponse;
 import com.nusrath.ecommerce.service.AccountService;
@@ -26,9 +27,9 @@ public class UserController {
     
 
     @PostMapping("/login")
-    public ApiResponse<UserDetailResponse> login(@RequestBody LoginRequest request) {
-        UserDetailResponse user = AccountService.login(request);
-        return ApiResponse.success(200, "Login successful", user);
+    public ApiResponse<LoginResponse> login(@RequestBody LoginRequest request) {
+        LoginResponse login = AccountService.login(request);
+        return ApiResponse.success(200, "Login successful", login);
     }
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
