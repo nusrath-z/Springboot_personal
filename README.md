@@ -40,17 +40,17 @@ Previously, I contributed to Spring Boot projects in collaborative environments.
 ## ✅ Completed Features
 - User model, controller, and service layers implemented  
 - Product model, controller, and service layers implemented  
-- Basic authentication system with signup and login functionality  
+- JWT authentication implemented.
+- Role-based authorization of endpoints (using @PreAuthorize)
 - Password security using basic authentication mechanisms  
 - Layered architecture (Controller → Service → Model/Repository)  
 
 ---
 
 ## 🏗 Planned Features
-- JWT-based authentication (Login/Logout)
+- Logout function
 - Order management system  
 - Shopping cart functionality  
-- Role-based authorization  
 - Logging and monitoring  
 - Payment integration  
 
